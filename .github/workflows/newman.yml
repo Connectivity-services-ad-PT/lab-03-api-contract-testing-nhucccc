@@ -21,7 +21,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Lint all OpenAPI contracts
         run: npm run lint:contracts
@@ -36,7 +36,7 @@ jobs:
         run: nohup npm run mock:iot > prism-iot.log 2>&1 &
 
       - name: Wait for all mock servers to be ready
-        run: npx wait-on http://localhost:4010/health http://localhost:4011/health http://localhost:4012/health --timeout 30000
+        run: npx wait-on --method GET http://localhost:4010/health http://localhost:4011/health http://localhost:4012/health --timeout 30000
 
       - name: Run Newman — team-core mock environment
         run: npm run test:core:mock
