@@ -27,16 +27,16 @@ jobs:
         run: npm run lint:contracts
 
       - name: Start Core Business mock server (port 4010)
-        run: nohup npm run mock:core > prism-core.log 2>&1 &
+        run: nohup npx prism mock contracts/core-business.openapi.yaml -p 4010 --host 0.0.0.0 > prism-core.log 2>&1 &
 
       - name: Start AI Vision mock server (port 4011)
-        run: nohup npm run mock:ai-vision > prism-vision.log 2>&1 &
+        run: nohup npx prism mock contracts/ai-vision.openapi.yaml -p 4011 --host 0.0.0.0 > prism-vision.log 2>&1 &
 
       - name: Start IoT Ingestion mock server (port 4012)
-        run: nohup npm run mock:iot > prism-iot.log 2>&1 &
+        run: nohup npx prism mock contracts/iot-ingestion.openapi.yaml -p 4012 --host 0.0.0.0 > prism-iot.log 2>&1 &
 
       - name: Wait for all mock servers to be ready
-        run: npx wait-on --method GET http://localhost:4010/health http://localhost:4011/health http://localhost:4012/health --timeout 30000
+        run: npx wait-on --method GET http://localhost:4010/health http://localhost:4011/health http://localhost:4012/health --timeout 60000 --interval 2000
 
       - name: Run Newman — team-core mock environment
         run: npm run test:core:mock
