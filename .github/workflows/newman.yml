@@ -1,4 +1,4 @@
-name: Newman Contract Tests
+name: Newman Contract Tests — team-core
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  newman:
+  lint-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,33 +18,43 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm install
 
-      - name: Lint OpenAPI contracts
+      - name: Lint all OpenAPI contracts
         run: npm run lint:contracts
 
-      - name: Start Prism mock servers
-        run: |
-          nohup npm run mock:iot > prism-iot.log 2>&1 &
-          nohup npm run mock:vision > prism-vision.log 2>&1 &
+      - name: Start Core Business mock server (port 4010)
+        run: nohup npm run mock:core > prism-core.log 2>&1 &
 
-      - name: Wait for mock servers
-        run: npx wait-on http://localhost:4010/health http://localhost:4011/health --timeout 30000
+      - name: Start AI Vision mock server (port 4011)
+        run: nohup npm run mock:ai-vision > prism-vision.log 2>&1 &
 
-      - name: Run Newman contract tests
-        run: npm run test:mock
+      - name: Start IoT Ingestion mock server (port 4012)
+        run: nohup npm run mock:iot > prism-iot.log 2>&1 &
+
+      - name: Wait for all mock servers to be ready
+        run: npx wait-on http://localhost:4010/health http://localhost:4011/health http://localhost:4012/health --timeout 30000
+
+      - name: Run Newman — team-core mock environment
+        run: npm run test:core:mock
+
+      - name: Generate HTML report
+        run: npm run test:core:html
+        continue-on-error: true
 
       - name: Show Prism logs on failure
         if: failure()
         run: |
-          cat prism-iot.log || true
+          cat prism-core.log || true
           cat prism-vision.log || true
+          cat prism-iot.log || true
 
       - name: Upload Newman reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: newman-reports
+          name: newman-reports-team-core
           path: reports/
