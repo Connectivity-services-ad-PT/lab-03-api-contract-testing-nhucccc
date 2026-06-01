@@ -112,6 +112,8 @@ paths:
           $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -158,6 +160,8 @@ paths:
                         createdAt: '2026-05-24T08:35:00Z'
                     nextCursor: ''
                     hasMore: false
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
@@ -347,6 +351,8 @@ paths:
           $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -944,4 +950,18 @@ components:
             status: 500
             detail: Loi ket noi database noi bo
             instance: /alerts
+            errors: []
+
+    TooManyRequests:
+      description: Vuot qua gioi han so request cho phep trong khoang thoi gian ngan
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://campus.local/errors/rate-limited
+            title: Qua nhieu yeu cau
+            status: 429
+            detail: Vuot qua gioi han 100 request/phut, thu lai sau 60 giay
+            instance: /events
             errors: []

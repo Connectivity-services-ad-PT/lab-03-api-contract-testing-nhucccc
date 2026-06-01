@@ -37,6 +37,7 @@ Ngay: 24/05/2026
 - [x] Co kiem tra response time — TC22, TC23 (skip tren mock, chay tren local)
 - [x] Co mo ta timeout mong muon — SLA 500ms p95 ghi trong openapi info description
 - [x] Co test hoac ghi chu retry/idempotency neu phu hop — POST /events co eventId lam idempotency key
+- [x] Contract khai bao 429 cho endpoint co nguy co bi goi nhieu — POST /events va POST /alerts co response 429
 - [x] Co consumer-side smoke test voi it nhat 1 mock cua nhom khac — TC19 IoT mock, TC20+TC21 AI Vision mock
 
 ## 6. Evidence
@@ -47,5 +48,5 @@ Ngay: 24/05/2026
 - [x] Newman report XML — reports/newman-report-mock.xml
 - [x] Newman report HTML — reports/newman-report.html
 - [x] Contract lint report — reports/contract-lint-report.txt (No errors found)
-- [x] Test-case matrix da dien — templates/test-case-matrix.csv (23 test cases)
+- [x] Test-case matrix da dien — templates/test-case-matrix.csv (25 test cases)
 - [x] Bien ban handshake da dien — templates/consumer-provider-handshake.md

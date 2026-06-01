@@ -25,16 +25,15 @@
 #### Request
 
 ```http
-POST /vision/face-match
+POST /detect
 Authorization: Bearer lab-token
 Content-Type: application/json
-Idempotency-Key: f47ac10b-58cc-4372-a567-0e02b2c3d479
 ```
 
 ```json
 {
-  "imageRef": "img-2026-05-24-gate01-001",
-  "gateId": "GATE-01"
+  "camera_id": "CAM01",
+  "image_url": "https://example.com/frame.jpg"
 }
 ```
 
@@ -42,20 +41,16 @@ Idempotency-Key: f47ac10b-58cc-4372-a567-0e02b2c3d479
 
 ```json
 {
-  "detectionId": "det-0196fb3d-4ad7-7d1e-9f49-5d5148d2babc",
-  "imageRef": "img-2026-05-24-gate01-001",
-  "matchDecision": "MATCH",
-  "confidence": 0.97,
-  "modelVersion": "v2.1.0",
-  "processedAt": "2026-05-24T08:00:01Z",
-  "traceId": "trace-abc-123"
+  "detections": [],
+  "camera_id": "CAM01",
+  "processed_at": "2026-05-24T08:00:01Z"
 }
 ```
 
 ### Ket qua
 
-- [x] Consumer goi mock thanh cong — TC21 POST /vision/face-match tra 200
-- [x] Consumer parse duoc field can dung — matchDecision, confidence trong [0,1]
+- [x] Consumer goi mock thanh cong — TC21 POST /detect tra 200
+- [x] Consumer parse duoc ket qua detection tu AI Vision
 - [x] Consumer hieu loi 4xx/5xx provider tra ve — ProblemDetails shape
 - [x] Co Newman report — reports/newman-report-mock.xml TC21 Pass
 

@@ -19,6 +19,8 @@ TC17,04_Boundary_Reliability,/alerts,GET,Limit above max 101 returns error,limit
 TC18,04_Boundary_Reliability,/alerts/{alertId},PATCH,Update alert status to ACKNOWLEDGED,status=ACKNOWLEDGED note present,200,id present status in enum,boundary,Pass,newman-report-mock.xml
 TC19,05_Consumer_side_Smoke,/health (IoT mock),GET,Core can reach IoT Ingestion mock,iotMockUrl/health,200,status=ok,consumer-smoke,Pass,newman-report-mock.xml
 TC20,05_Consumer_side_Smoke,/health (AI Vision mock),GET,Core can reach AI Vision mock,aiVisionMockUrl/health,200,status=ok,consumer-smoke,Pass,newman-report-mock.xml
-TC21,05_Consumer_side_Smoke,/vision/face-match (AI Vision mock),POST,Core can call AI Vision face-match,imageRef+gateId body,200,matchDecision in enum confidence in [0-1],consumer-smoke,Pass,newman-report-mock.xml
+TC21,05_Consumer_side_Smoke,/detect (AI Vision mock),POST,Core can call AI Vision detect mock,camera_id+image_url body,200,detection result object,consumer-smoke,Pass,newman-report-mock.xml
 TC22,06_Local_only_NonFunctional,/events,POST,Local response time under 1000ms,SENSOR_READING body,201,responseTime < 1000ms,non-functional,Skipped on mock,newman-report-mock.xml
 TC23,06_Local_only_NonFunctional,/alerts,GET,List alerts under 500ms on local,limit=20,200,responseTime < 500ms,non-functional,Skipped on mock,newman-report-mock.xml
+TC24,03_Negative,/alerts,GET,Invalid query param returns 400,limit=-1 or limit=abc,400,ProblemDetails title+status,negative,Pass,newman-report-mock.xml
+TC25,04_Boundary_Reliability,/events,POST,Rate limit response 429 documented in contract,Prefer code=429,429,ProblemDetails status=429,boundary,Pass,newman-report-mock.xml
