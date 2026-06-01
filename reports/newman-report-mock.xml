@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="FIT4110 Lab03 - Core Business Contract Tests" tests="23" time="0.259">
+  <testsuite name="00_Health / GET /health - service is alive" id="325c0686-6d98-4bf5-9308-cd378323dd4d" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.040">
+    <testcase name="Status code is 200" time="0.040" classname="00HealthGetHealthServiceIsAlive"/>
+    <testcase name="Response has status ok" time="0.040" classname="00HealthGetHealthServiceIsAlive"/>
+  </testsuite>
+  <testsuite name="01_Functional / POST /events - ingest IoT sensor event" id="a08a25ae-ac24-49cd-b526-21983038225c" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.010">
+    <testcase name="Status code is 201" time="0.010" classname="01FunctionalPostEventsIngestIoTSensorEvent"/>
+    <testcase name="Response has eventId and acceptedAt" time="0.010" classname="01FunctionalPostEventsIngestIoTSensorEvent"/>
+  </testsuite>
+  <testsuite name="01_Functional / POST /alerts - create alert from threshold exceeded" id="b877e1e7-5272-45c6-b306-1f906c69bb69" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.007">
+    <testcase name="Status code is 201" time="0.007" classname="01FunctionalPostAlertsCreateAlertFromThresholdExceeded"/>
+    <testcase name="Alert has required fields" time="0.007" classname="01FunctionalPostAlertsCreateAlertFromThresholdExceeded"/>
+  </testsuite>
+  <testsuite name="01_Functional / GET /alerts - list alerts" id="81b920f8-0192-43d5-9564-6e6d72052c12" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.009">
+    <testcase name="Status code is 200" time="0.009" classname="01FunctionalGetAlertsListAlerts"/>
+    <testcase name="Response has items array and pagination" time="0.009" classname="01FunctionalGetAlertsListAlerts"/>
+  </testsuite>
+  <testsuite name="01_Functional / GET /alerts/recent - get recent alerts" id="f77c0643-deb7-4428-bf8b-077f0a46574d" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.012">
+    <testcase name="Status code is 200" time="0.012" classname="01FunctionalGetAlertsRecentGetRecentAlerts"/>
+    <testcase name="Response has items array" time="0.012" classname="01FunctionalGetAlertsRecentGetRecentAlerts"/>
+  </testsuite>
+  <testsuite name="01_Functional / GET /alerts/{alertId} - get alert by id" id="779241e8-d9ca-4f93-a3e0-23fb78bfb41b" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.008">
+    <testcase name="Status code is 200" time="0.008" classname="01FunctionalGetAlertsAlertIdGetAlertById"/>
+    <testcase name="Alert has id and status" time="0.008" classname="01FunctionalGetAlertsAlertIdGetAlertById"/>
+  </testsuite>
+  <testsuite name="01_Functional / GET /devices/{deviceId} - get device info" id="987af707-ccb2-48b2-b8be-573b95086fc9" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.008">
+    <testcase name="Status code is 200" time="0.008" classname="01FunctionalGetDevicesDeviceIdGetDeviceInfo"/>
+    <testcase name="Device has locationId and status" time="0.008" classname="01FunctionalGetDevicesDeviceIdGetDeviceInfo"/>
+  </testsuite>
+  <testsuite name="02_Auth / GET /alerts - valid token accepted" id="fc247d10-2b2b-46e0-867b-b27fb884f2db" timestamp="2026-06-01T12:53:57.941Z" tests="1" failures="0" errors="0" time="0.008">
+    <testcase name="Valid token returns 200" time="0.008" classname="02AuthGetAlertsValidTokenAccepted"/>
+  </testsuite>
+  <testsuite name="02_Auth / GET /alerts - missing token rejected" id="e4708ec3-201d-486f-ae71-fd37e487d72c" timestamp="2026-06-01T12:53:57.941Z" tests="1" failures="0" errors="0" time="0.010">
+    <testcase name="Skipped on mock: Prism enforces auth from contract" time="0.010" classname="02AuthGetAlertsMissingTokenRejected"/>
+  </testsuite>
+  <testsuite name="02_Auth / GET /alerts - invalid token rejected" id="6fe06d68-f137-4b40-8d06-95356bbfe5ac" timestamp="2026-06-01T12:53:57.941Z" tests="1" failures="0" errors="0" time="0.011">
+    <testcase name="Skipped on mock: real auth requires service implementation" time="0.011" classname="02AuthGetAlertsInvalidTokenRejected"/>
+  </testsuite>
+  <testsuite name="03_Negative / POST /alerts - missing required field returns 400" id="6acdd7a3-c263-41a5-a293-0d9f66ed3216" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.010">
+    <testcase name="Missing required fields returns client error" time="0.010" classname="03NegativePostAlertsMissingRequiredFieldReturns400"/>
+    <testcase name="Error follows ProblemDetails shape" time="0.010" classname="03NegativePostAlertsMissingRequiredFieldReturns400"/>
+  </testsuite>
+  <testsuite name="03_Negative / POST /alerts - wrong enum alertType returns 400" id="617ba611-90c4-4be1-823f-7cc4daecfdf8" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.010">
+    <testcase name="Wrong enum returns client error" time="0.010" classname="03NegativePostAlertsWrongEnumAlertTypeReturns400"/>
+    <testcase name="Error has detail field" time="0.010" classname="03NegativePostAlertsWrongEnumAlertTypeReturns400"/>
+  </testsuite>
+  <testsuite name="03_Negative / POST /events - wrong eventType discriminator returns 400" id="7268e107-6983-4420-b801-11dbffd8677d" timestamp="2026-06-01T12:53:57.941Z" tests="1" failures="0" errors="0" time="0.029">
+    <testcase name="Unknown eventType returns client error" time="0.029" classname="03NegativePostEventsWrongEventTypeDiscriminatorReturns400"/>
+  </testsuite>
+  <testsuite name="03_Negative / GET /alerts/{alertId} - not found returns 404" id="f7aafd71-34bc-4efa-8e8c-b3e7ad8a3653" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.007">
+    <testcase name="Non-existent alert returns 404" time="0.007" classname="03NegativeGetAlertsAlertIdNotFoundReturns404"/>
+    <testcase name="404 follows ProblemDetails" time="0.007" classname="03NegativeGetAlertsAlertIdNotFoundReturns404"/>
+  </testsuite>
+  <testsuite name="04_Boundary_Reliability / POST /events - threshold exceeded event accepted" id="59b31c60-5bd9-4ad3-836e-7fef859c96f0" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.009">
+    <testcase name="Threshold exceeded event returns 201" time="0.009" classname="04BoundaryReliabilityPostEventsThresholdExceededEventAccepted"/>
+    <testcase name="Response confirms event accepted" time="0.009" classname="04BoundaryReliabilityPostEventsThresholdExceededEventAccepted"/>
+  </testsuite>
+  <testsuite name="04_Boundary_Reliability / GET /alerts - limit at max boundary 100" id="60a8d262-239e-42a6-9d76-9ebc37aab976" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.010">
+    <testcase name="Limit at max 100 returns 200" time="0.010" classname="04BoundaryReliabilityGetAlertsLimitAtMaxBoundary100"/>
+    <testcase name="Items count does not exceed 100" time="0.010" classname="04BoundaryReliabilityGetAlertsLimitAtMaxBoundary100"/>
+  </testsuite>
+  <testsuite name="04_Boundary_Reliability / GET /alerts - limit above max 101 returns error" id="1d41987f-c3b3-4146-9a1d-0d9cd24d5208" timestamp="2026-06-01T12:53:57.941Z" tests="1" failures="0" errors="0" time="0.006">
+    <testcase name="Limit above max returns client error" time="0.006" classname="04BoundaryReliabilityGetAlertsLimitAboveMax101ReturnsError"/>
+  </testsuite>
+  <testsuite name="04_Boundary_Reliability / PATCH /alerts/{alertId} - update status to ACKNOWLEDGED" id="72faed79-5462-4e79-bc6f-2b375076ccf3" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.007">
+    <testcase name="Status update returns 200" time="0.007" classname="04BoundaryReliabilityPatchAlertsAlertIdUpdateStatusToAcknowledged"/>
+    <testcase name="Response is a valid Alert object" time="0.007" classname="04BoundaryReliabilityPatchAlertsAlertIdUpdateStatusToAcknowledged"/>
+  </testsuite>
+  <testsuite name="05_Consumer_side_Smoke / Consumer smoke - Core calls IoT Ingestion mock health" id="0254f60c-2011-4331-9ebf-dd7c3de05795" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.010">
+    <testcase name="IoT Ingestion mock is reachable" time="0.010" classname="05ConsumerSideSmokeConsumerSmokeCoreCallsIoTIngestionMockHealth"/>
+    <testcase name="IoT mock returns service status" time="0.010" classname="05ConsumerSideSmokeConsumerSmokeCoreCallsIoTIngestionMockHealth"/>
+  </testsuite>
+  <testsuite name="05_Consumer_side_Smoke / Consumer smoke - Core calls AI Vision mock health" id="66b21972-785e-43de-bbdc-e2c782555aa1" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.012">
+    <testcase name="AI Vision mock is reachable" time="0.012" classname="05ConsumerSideSmokeConsumerSmokeCoreCallsAiVisionMockHealth"/>
+    <testcase name="AI Vision mock returns service status" time="0.012" classname="05ConsumerSideSmokeConsumerSmokeCoreCallsAiVisionMockHealth"/>
+  </testsuite>
+  <testsuite name="05_Consumer_side_Smoke / Consumer smoke - Core calls AI Vision mock face-match" id="9cc9b845-3bba-4206-8988-4aa6d2f777ba" timestamp="2026-06-01T12:53:57.941Z" tests="2" failures="0" errors="0" time="0.010">
+    <testcase name="Core can call AI Vision face-match mock" time="0.010" classname="05ConsumerSideSmokeConsumerSmokeCoreCallsAiVisionMockFaceMatch"/>
+    <testcase name="Core can parse matchDecision from AI Vision" time="0.010" classname="05ConsumerSideSmokeConsumerSmokeCoreCallsAiVisionMockFaceMatch"/>
+  </testsuite>
+  <testsuite name="06_Local_only_NonFunctional / POST /events - local response time threshold" id="2f8dbe43-c0d5-4183-b59d-8dc2d960e579" timestamp="2026-06-01T12:53:57.941Z" tests="1" failures="0" errors="0" time="0.007">
+    <testcase name="Skipped on mock: mock latency is not evidence of real service reliability" time="0.007" classname="06LocalOnlyNonFunctionalPostEventsLocalResponseTimeThreshold"/>
+  </testsuite>
+  <testsuite name="06_Local_only_NonFunctional / GET /alerts - local pagination performance" id="28ce840f-0d28-4dbb-ac0a-84ff8e372475" timestamp="2026-06-01T12:53:57.941Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="Skipped on mock: latency test only valid on real service" time="0.009" classname="06LocalOnlyNonFunctionalGetAlertsLocalPaginationPerformance"/>
+  </testsuite>
+</testsuites>
