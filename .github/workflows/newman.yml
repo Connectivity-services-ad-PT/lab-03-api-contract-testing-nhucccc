@@ -36,7 +36,17 @@ jobs:
         run: nohup npx prism mock contracts/iot-ingestion.openapi.yaml -p 4012 --host 0.0.0.0 > prism-iot.log 2>&1 &
 
       - name: Wait for all mock servers to be ready
-        run: npx wait-on --method GET http://localhost:4010/health http://localhost:4011/health http://localhost:4012/health --timeout 60000 --interval 2000
+        run: |
+          for port in 4010 4011 4012; do
+            echo "Waiting for port $port..."
+            for i in $(seq 1 30); do
+              if curl -sf http://localhost:$port/health > /dev/null 2>&1; then
+                echo "Port $port is ready"
+                break
+              fi
+              sleep 2
+            done
+          done
 
       - name: Run Newman — team-core mock environment
         run: npm run test:core:mock
