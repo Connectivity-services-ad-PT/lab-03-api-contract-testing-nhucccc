@@ -1,57 +1,113 @@
 # Consumer–Provider Handshake
 
-## Thông tin chung
+## Thong tin chung
 
 - Lab: FIT4110 Lab 03
-- Ngày:
-- Provider team:
-- Consumer team:
-- Provider service:
-- Consumer service:
+- Ngay: 24/05/2026
+- Provider team: team-core (A6 — Core Business)
+- Consumer team: team-vision (A4 — AI Vision) va team-iot (A1 — IoT Ingestion)
+- Provider service: Core Business API
+- Consumer service: AI Vision API (consumer smoke), IoT Ingestion API (consumer smoke)
 
-## Contract
+---
 
-- Contract file:
-- Mock base URL:
-- Auth method:
-- Endpoint được test:
+## Handshake 1 — Core Business (Provider) voi AI Vision (Consumer)
 
-## Smoke test
+### Contract
 
-### Request
+- Contract file: contracts/core-business.openapi.yaml
+- Mock base URL: http://localhost:4010
+- Auth method: Bearer token (Authorization: Bearer {{authToken}})
+- Endpoint duoc test: POST /events, POST /alerts, GET /alerts, GET /alerts/recent, GET /alerts/{alertId}, PATCH /alerts/{alertId}, GET /devices/{deviceId}
+
+### Consumer smoke test — Core goi AI Vision mock
+
+#### Request
 
 ```http
-METHOD /path
-Authorization: Bearer <token>
+POST /vision/face-match
+Authorization: Bearer lab-token
 Content-Type: application/json
+Idempotency-Key: f47ac10b-58cc-4372-a567-0e02b2c3d479
 ```
 
 ```json
 {
+  "imageRef": "img-2026-05-24-gate01-001",
+  "gateId": "GATE-01"
 }
 ```
 
-### Expected response
+#### Expected response
 
 ```json
 {
+  "detectionId": "det-0196fb3d-4ad7-7d1e-9f49-5d5148d2babc",
+  "imageRef": "img-2026-05-24-gate01-001",
+  "matchDecision": "MATCH",
+  "confidence": 0.97,
+  "modelVersion": "v2.1.0",
+  "processedAt": "2026-05-24T08:00:01Z",
+  "traceId": "trace-abc-123"
 }
 ```
 
-## Kết quả
+### Ket qua
 
-- [ ] Consumer gọi mock thành công.
-- [ ] Consumer parse được field cần dùng.
-- [ ] Consumer hiểu lỗi 4xx/5xx provider trả về.
-- [ ] Có Newman report hoặc screenshot.
+- [x] Consumer goi mock thanh cong — TC21 POST /vision/face-match tra 200
+- [x] Consumer parse duoc field can dung — matchDecision, confidence trong [0,1]
+- [x] Consumer hieu loi 4xx/5xx provider tra ve — ProblemDetails shape
+- [x] Co Newman report — reports/newman-report-mock.xml TC21 Pass
 
-## Ghi chú thay đổi hợp đồng
+---
 
-| Nội dung | Trước | Sau | Người đồng ý |
+## Handshake 2 — Core Business (Consumer) voi IoT Ingestion (Provider)
+
+### Contract
+
+- Contract file: contracts/iot-ingestion.openapi.yaml (mau) / openapi.yaml Lab 02 (A1)
+- Mock base URL: http://localhost:4012
+- Auth method: Bearer token
+- Endpoint duoc test: GET /health
+
+### Consumer smoke test — Core goi IoT Ingestion mock
+
+#### Request
+
+```http
+GET /health
+```
+
+#### Expected response
+
+```json
+{
+  "status": "ok",
+  "service": "iot-ingestion",
+  "version": "0.3.0"
+}
+```
+
+### Ket qua
+
+- [x] Consumer goi mock thanh cong — TC19 GET /health tra 200
+- [x] Consumer parse duoc field can dung — status=ok
+- [x] Consumer hieu loi 4xx/5xx provider tra ve — ProblemDetails shape
+- [x] Co Newman report — reports/newman-report-mock.xml TC19 Pass
+
+---
+
+## Ghi chu thay doi hop dong
+
+| Noi dung | Truoc | Sau | Nguoi dong y |
 |---|---|---|---|
-| | | | |
+| POST /events them oneOf discriminator | Khong co | SENSOR_READING / THRESHOLD_EXCEEDED | A6 + A1 |
+| Alert schema flat thay vi allOf | allOf + additionalProperties | flat schema | A6 |
+| union type null cho note field | oneOf nullable | type: [string, null] | A6 |
 
-## Xác nhận
+## Xac nhan
 
-- Provider representative:
-- Consumer representative:
+- Provider representative (A6 — Core Business): Nglo Quang Huy
+- Consumer representative (A4 — AI Vision): Dai dien Nhom A4
+- Consumer representative (A1 — IoT Ingestion): Dai dien Nhom A1
+- Ngay: 24/05/2026

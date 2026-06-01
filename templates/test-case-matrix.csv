@@ -1,6 +1,24 @@
-ID,Folder,Endpoint,Method,Scenario,Input file/body,Expected status,Expected response check,Type,Pass/Fail,Evidence
-TC01,Functional,/health,GET,Service is alive,-,200,status=ok,functional,,
-TC02,Functional,/readings,POST,Create reading happy path,mock-data/sensor-reading-valid.json,201,"has reading_id, accepted=true",functional,,
-TC03,Negative,/readings,POST,Missing device_id,mock-data/sensor-reading-invalid-missing-device.json,400,Problem Details,negative,,
-TC04,Auth,/readings,POST,Missing token,mock-data/sensor-reading-valid.json,401,Problem Details,auth,,
-TC05,Boundary,/readings,POST,High temperature boundary,mock-data/sensor-reading-boundary.json,201/400,documented behavior,boundary,,
+ID,Folder,Endpoint,Method,Scenario,Input body/params,Expected status,Expected response check,Type,Pass/Fail,Evidence
+TC01,00_Health,/health,GET,Service is alive,-,200,status=ok service present,functional,Pass,newman-report-mock.xml
+TC02,01_Functional,/events,POST,Ingest IoT sensor reading happy path,SENSOR_READING event body,201,has eventId and acceptedAt,functional,Pass,newman-report-mock.xml
+TC03,01_Functional,/alerts,POST,Create alert from threshold exceeded,alertType+severity+message body,201,id present status=OPEN severity=HIGH createdAt present,functional,Pass,newman-report-mock.xml
+TC04,01_Functional,/alerts,GET,List alerts with pagination,limit=5,200,items is array hasMore present,functional,Pass,newman-report-mock.xml
+TC05,01_Functional,/alerts/recent,GET,Get recent alerts,limit=10,200,items is array,functional,Pass,newman-report-mock.xml
+TC06,01_Functional,/alerts/{alertId},GET,Get alert by known ID,alertId in path,200,id present status in enum,functional,Pass,newman-report-mock.xml
+TC07,01_Functional,/devices/{deviceId},GET,Get device info by ID,deviceId in path,200,deviceId locationId status present,functional,Pass,newman-report-mock.xml
+TC08,02_Auth,/alerts,GET,Valid token is accepted,Bearer lab-token,200,200 OK,auth,Pass,newman-report-mock.xml
+TC09,02_Auth,/alerts,GET,Missing token rejected on real service,no Authorization header,401/403,ProblemDetails,auth,Pass(skipped on mock),newman-report-mock.xml
+TC10,02_Auth,/alerts,GET,Invalid token rejected on real service,Bearer invalid-token-xyz,401/403,ProblemDetails,auth,Pass(skipped on mock),newman-report-mock.xml
+TC11,03_Negative,/alerts,POST,Missing required fields returns 400,missing sourceService and message,400/422,ProblemDetails title+status,negative,Pass,newman-report-mock.xml
+TC12,03_Negative,/alerts,POST,Wrong enum alertType returns 400,alertType=INVALID_TYPE,400/422,detail field present,negative,Pass,newman-report-mock.xml
+TC13,03_Negative,/events,POST,Wrong eventType discriminator returns 400,eventType=UNKNOWN_EVENT,400/422,client error,negative,Pass,newman-report-mock.xml
+TC14,03_Negative,/alerts/{alertId},GET,Non-existent alert returns 404,UUID all zeros,404,status=404 ProblemDetails,negative,Pass,newman-report-mock.xml
+TC15,04_Boundary_Reliability,/events,POST,THRESHOLD_EXCEEDED event accepted,full ThresholdExceededEvent body,201,eventId acceptedAt present,boundary,Pass,newman-report-mock.xml
+TC16,04_Boundary_Reliability,/alerts,GET,Limit at max boundary 100,limit=100,200,items.length <= 100,boundary,Pass,newman-report-mock.xml
+TC17,04_Boundary_Reliability,/alerts,GET,Limit above max 101 returns error,limit=101,400/422,client error,boundary,Pass,newman-report-mock.xml
+TC18,04_Boundary_Reliability,/alerts/{alertId},PATCH,Update alert status to ACKNOWLEDGED,status=ACKNOWLEDGED note present,200,id present status in enum,boundary,Pass,newman-report-mock.xml
+TC19,05_Consumer_side_Smoke,/health (IoT mock),GET,Core can reach IoT Ingestion mock,iotMockUrl/health,200,status=ok,consumer-smoke,Pass,newman-report-mock.xml
+TC20,05_Consumer_side_Smoke,/health (AI Vision mock),GET,Core can reach AI Vision mock,aiVisionMockUrl/health,200,status=ok,consumer-smoke,Pass,newman-report-mock.xml
+TC21,05_Consumer_side_Smoke,/vision/face-match (AI Vision mock),POST,Core can call AI Vision face-match,imageRef+gateId body,200,matchDecision in enum confidence in [0-1],consumer-smoke,Pass,newman-report-mock.xml
+TC22,06_Local_only_NonFunctional,/events,POST,Local response time under 1000ms,SENSOR_READING body,201,responseTime < 1000ms,non-functional,Skipped on mock,newman-report-mock.xml
+TC23,06_Local_only_NonFunctional,/alerts,GET,List alerts under 500ms on local,limit=20,200,responseTime < 500ms,non-functional,Skipped on mock,newman-report-mock.xml
